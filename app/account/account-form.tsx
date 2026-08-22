@@ -87,8 +87,15 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
 
   return (
     <div className="form-widget">
-      {/* ... */}
-
+      <Avatar
+        uid={claims?.sub ?? null}
+        url={avatar_url}
+        size={150}
+        onUpload={(url) => {
+          setAvatarUrl(url)
+          updateProfile({ fullname, username, website, avatar_url: url })
+        }}
+      />
       <div>
         <label htmlFor="email">Email</label>
         <input id="email" type="text" value={claims?.email ?? ""} disabled />

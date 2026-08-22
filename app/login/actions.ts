@@ -1,8 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-
 import { createClient } from "@/lib/supabase/server";
 
 export async function login(formData: FormData) {
@@ -15,18 +13,13 @@ export async function login(formData: FormData) {
     password: formData.get("password") as string,
   };
 
-  const { data: signinData, error } =
+  const { error } =
     await supabase.auth.signInWithPassword(data);
 
   if (error) {
-    console.log("SIGNIN ERROR:", error); // ⭐ ตรงนี้สำคัญที่สุด
-    console.log("DETAIL:", error.message); // ⭐ ดูข้อความ error
-    console.log("FORM DATA:", data); // ⭐ ตรวจ email/password ถูกส่งไหม
-    redirect("/error");
+    redirect(`/error?message=${error.message}`);
   }
 
-  console.log("SIGNIN SUCCESS:", signinData); // ⭐ ดูว่ามี user กลับมาหรือไม่
-  revalidatePath("/", "layout");
   redirect("/account");
 }
 
@@ -40,17 +33,16 @@ export async function signup(formData: FormData) {
     password: formData.get("password") as string,
   };
 
-  const { data: signupData, error } = await supabase.auth.signUp(data);
+  const { error } = await supabase.auth.signUp(data);
 
   if (error) {
     if (error.code === "email_not_confirmed") {
-      return redirect("/login?message=กรุณายืนยันอีเมลก่อนเข้าสู่ระบบ");
+      return redirect("/login");
     }
 
     console.log("SIGNIN ERROR:", error);
-    return redirect("/error");
+    return redirect(`/error?message=${error.message}`);
   }
 
-  console.log("SIGNUP SUCCESS:", signupData);
-  return redirect("/login?message=กรุณาตรวจสอบอีเมลเพื่อยืนยันบัญชี");
+  return redirect("/login");
 }

@@ -1,14 +1,50 @@
-import { login, signup } from './actions'
+import { login, signup } from "./actions";
 
 export default function LoginPage() {
   return (
-    <form>
-      <label htmlFor="email">Email:</label>
-      <input id="email" name="email" type="email" required />
-      <label htmlFor="password">Password:</label>
-      <input id="password" name="password" type="password" required />
-      <button formAction={login} className='border'>Log in</button>
-      <button formAction={signup} className='border'>Sign up</button>
-    </form>
-  )
+    <div>
+      <div>
+        <h1>LogIn</h1>
+        <form className="form-widget">
+          <div>
+            <label>Email</label>
+            <input name="email" type="email" required />
+          </div>
+
+          <div>
+            <label>Password</label>
+            <input name="password" type="password" required />
+          </div>
+
+          <div>
+            <button formAction={login} className="button block">
+              Login
+            </button>
+          </div>
+        </form>
+
+        <hr />
+
+        <form className="form-widget">
+          <h2>หรือสมัครสมาชิกใหม่</h2>
+
+          <div>
+            <label>Email</label>
+            <input name="email" type="email" required />
+          </div>
+
+          <div>
+            <label>Password</label>
+            <input name="password" type="password" required />
+          </div>
+
+          <div>
+            <button formAction={signup} className="button primary block">
+              Signup
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 }
