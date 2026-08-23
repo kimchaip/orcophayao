@@ -9,6 +9,8 @@ export async function GET(request: NextRequest) {
   const type = searchParams.get('type') as EmailOtpType | null
   const next = '/account'
 
+  console.log('confirmEmail searchParams : ' + JSON.stringify(searchParams));
+
   // Create redirect link without the secret token
   const redirectTo = request.nextUrl.clone()
   redirectTo.pathname = next

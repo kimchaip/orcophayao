@@ -1,4 +1,5 @@
 "use client";
+
 import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Avatar from "./avatar";
@@ -28,10 +29,7 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
         .eq("id", claims.sub)
         .single();
 
-      if (error && status !== 406) {
-        console.log(error);
-        throw error;
-      }
+      if (error && status !== 406) throw error;
 
       if (data) {
         setFullname(data.full_name);
@@ -76,7 +74,9 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
         avatar_url,
         updated_at: new Date().toISOString(),
       });
+
       if (error) throw error;
+
       alert("Profile updated!");
     } catch (error) {
       alert("Error updating the data!");
@@ -86,67 +86,87 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
   }
 
   return (
-    <div className="form-widget">
-      <Avatar
-        uid={claims?.sub ?? null}
-        url={avatar_url}
-        size={150}
-        onUpload={(url) => {
-          setAvatarUrl(url)
-          updateProfile({ fullname, username, website, avatar_url: url })
-        }}
-      />
-      <div>
-        <label htmlFor="email">Email</label>
-        <input id="email" type="text" value={claims?.email ?? ""} disabled />
+    <div className="bg-[#1a1a1a] p-6 rounded-lg shadow-md border border-[#333] text-white space-y-6 max-w-lg mx-auto">
+
+      {/* Avatar */}
+      <div className="flex justify-center">
+        <Avatar
+          uid={claims?.sub ?? null}
+          url={avatar_url}
+          size={150}
+          onUpload={(url) => {
+            setAvatarUrl(url);
+            updateProfile({ fullname, username, website, avatar_url: url });
+          }}
+        />
       </div>
-      <div>
-        <label htmlFor="fullName">Full Name</label>
+
+      {/* Email */}
+      <div className="space-y-1">
+        <label htmlFor="email" className="text-sm text-gray-300">Email</label>
+        <input
+          id="email"
+          type="text"
+          value={claims?.email ?? ""}
+          disabled
+          className="w-full p-2 rounded bg-[#222] text-gray-400 border border-[#444]"
+        />
+      </div>
+
+      {/* Full Name */}
+      <div className="space-y-1">
+        <label htmlFor="fullName" className="text-sm text-gray-300">Full Name</label>
         <input
           id="fullName"
           type="text"
           value={fullname || ""}
           onChange={(e) => setFullname(e.target.value)}
+          className="w-full p-2 rounded bg-[#222] text-white border border-[#444] focus:outline-none focus:border-green-500"
         />
       </div>
-      <div>
-        <label htmlFor="username">Username</label>
+
+      {/* Username */}
+      <div className="space-y-1">
+        <label htmlFor="username" className="text-sm text-gray-300">Username</label>
         <input
           id="username"
           type="text"
           value={username || ""}
           onChange={(e) => setUsername(e.target.value)}
+          className="w-full p-2 rounded bg-[#222] text-white border border-[#444] focus:outline-none focus:border-green-500"
         />
       </div>
-      <div>
-        <label htmlFor="website">Website</label>
+
+      {/* Website */}
+      <div className="space-y-1">
+        <label htmlFor="website" className="text-sm text-gray-300">Website</label>
         <input
           id="website"
           type="url"
           value={website || ""}
           onChange={(e) => setWebsite(e.target.value)}
+          className="w-full p-2 rounded bg-[#222] text-white border border-[#444] focus:outline-none focus:border-green-500"
         />
       </div>
 
-      <div>
-        <button
-          className="button primary block"
-          onClick={() =>
-            updateProfile({ fullname, username, website, avatar_url })
-          }
-          disabled={loading || !claims?.sub}
-        >
-          {loading ? "Loading ..." : "Update"}
-        </button>
-      </div>
+      {/* Update Button */}
+      <button
+        className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded transition"
+        onClick={() => updateProfile({ fullname, username, website, avatar_url })}
+        disabled={loading || !claims?.sub}
+      >
+        {loading ? "Loading ..." : "Update"}
+      </button>
 
-      <div>
-        <form action="/auth/signout" method="post">
-          <button className="button block" type="submit">
-            Sign out
-          </button>
-        </form>
-      </div>
+      {/* Sign Out */}
+      <form action="/auth/signout" method="post">
+        <button
+          type="submit"
+          className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded transition"
+        >
+          Sign out
+        </button>
+      </form>
     </div>
   );
 }

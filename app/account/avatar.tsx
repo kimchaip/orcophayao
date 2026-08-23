@@ -1,4 +1,5 @@
 'use client'
+
 import React, { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import Image from 'next/image'
@@ -22,9 +23,7 @@ export default function Avatar({
     async function downloadImage(path: string) {
       try {
         const { data, error } = await supabase.storage.from('avatars').download(path)
-        if (error) {
-          throw error
-        }
+        if (error) throw error
 
         const url = URL.createObjectURL(data)
         setAvatarUrl(url)
@@ -50,9 +49,7 @@ export default function Avatar({
 
       const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file)
 
-      if (uploadError) {
-        throw uploadError
-      }
+      if (uploadError) throw uploadError
 
       onUpload(filePath)
     } catch (error) {
@@ -63,33 +60,41 @@ export default function Avatar({
   }
 
   return (
-    <div>
+    <div className="flex flex-col items-center space-y-4">
+
+      {/* Avatar Image */}
       {avatarUrl ? (
         <Image
           width={size}
           height={size}
           src={avatarUrl}
           alt="Avatar"
-          className="avatar image"
+          className="rounded-full border-4 border-green-600 shadow-lg object-cover"
           style={{ height: size, width: size }}
         />
       ) : (
-        <div className="avatar no-image" style={{ height: size, width: size }} />
+        <div
+          className="rounded-full bg-[#333] border-4 border-green-600 shadow-lg"
+          style={{ height: size, width: size }}
+        />
       )}
-      <div style={{ width: size }}>
-        <label className="button primary block" htmlFor="single">
-          {uploading ? 'Uploading ...' : 'Upload'}
+
+      {/* Upload Button */}
+      <div className="w-full flex flex-col items-center">
+        <label
+          htmlFor="single"
+          className="w-full text-center bg-green-600 hover:bg-green-700 text-white py-2 rounded cursor-pointer transition"
+        >
+          {uploading ? 'Uploading ...' : 'Upload Avatar'}
         </label>
+
         <input
-          style={{
-            visibility: 'hidden',
-            position: 'absolute',
-          }}
-          type="file"
           id="single"
+          type="file"
           accept="image/*"
           onChange={uploadAvatar}
           disabled={uploading}
+          className="hidden"
         />
       </div>
     </div>
