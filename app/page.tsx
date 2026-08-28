@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import LoginPage from "./login/page"; // ใช้หน้า login เดิมของคุณ
+import LoginForm from "@/components/LoginForm";
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -10,7 +10,7 @@ export default async function HomePage() {
 
   // ถ้า login แล้ว → ไปหน้า account
   if (user) {
-    redirect("/account");
+    redirect("/orschedule/dashboard");
   }
 
   // ถ้ายังไม่ login → แสดงหน้า homepage + login
@@ -32,7 +32,7 @@ export default async function HomePage() {
 
       {/* LOGIN FORM เดิม */}
       <div className="w-full max-w-md">
-        <LoginPage />
+        <LoginForm />
       </div>
     </div>
   );

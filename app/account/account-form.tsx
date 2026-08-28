@@ -87,7 +87,6 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
 
   return (
     <div className="bg-[#1a1a1a] p-6 rounded-lg shadow-md border border-[#333] text-white space-y-6 max-w-lg mx-auto">
-
       {/* Avatar */}
       <div className="flex justify-center">
         <Avatar
@@ -103,7 +102,9 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
 
       {/* Email */}
       <div className="space-y-1">
-        <label htmlFor="email" className="text-sm text-gray-300">Email</label>
+        <label htmlFor="email" className="text-sm text-gray-300">
+          Email
+        </label>
         <input
           id="email"
           type="text"
@@ -115,7 +116,9 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
 
       {/* Full Name */}
       <div className="space-y-1">
-        <label htmlFor="fullName" className="text-sm text-gray-300">Full Name</label>
+        <label htmlFor="fullName" className="text-sm text-gray-300">
+          Full Name
+        </label>
         <input
           id="fullName"
           type="text"
@@ -127,7 +130,9 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
 
       {/* Username */}
       <div className="space-y-1">
-        <label htmlFor="username" className="text-sm text-gray-300">Username</label>
+        <label htmlFor="username" className="text-sm text-gray-300">
+          Username
+        </label>
         <input
           id="username"
           type="text"
@@ -139,7 +144,9 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
 
       {/* Website */}
       <div className="space-y-1">
-        <label htmlFor="website" className="text-sm text-gray-300">Website</label>
+        <label htmlFor="website" className="text-sm text-gray-300">
+          Website
+        </label>
         <input
           id="website"
           type="url"
@@ -152,21 +159,22 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
       {/* Update Button */}
       <button
         className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded transition"
-        onClick={() => updateProfile({ fullname, username, website, avatar_url })}
+        onClick={() =>
+          updateProfile({ fullname, username, website, avatar_url })
+        }
         disabled={loading || !claims?.sub}
       >
-        {loading ? "Loading ..." : "Update"}
+        {loading ? "Loading ..." : "Save"}
       </button>
 
-      {/* Sign Out */}
-      <form action="/auth/signout" method="post">
-        <button
-          type="submit"
-          className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded transition"
-        >
-          Sign out
-        </button>
-      </form>
+      {/* cancel */}
+      <button
+        type="button"
+        onClick={() => window.history.back()}
+        className="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 rounded transition"
+      >
+        Cancel
+      </button>
     </div>
   );
 }
