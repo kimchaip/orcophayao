@@ -5,7 +5,7 @@ type Props = {
 };
 
 export default function MediaUploadForm({ onSubmit }: Props) {
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);

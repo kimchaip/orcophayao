@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import type { OrSchedule } from "@/types/orschedule";
-import { createClient } from "@/lib/supabase/client";
 
 type Props = {
   initial?: Partial<OrSchedule>;
