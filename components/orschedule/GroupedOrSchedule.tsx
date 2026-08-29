@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { OrSchedule } from "@/types/orschedule";
+import QueSelector from "@/components/orschedule/QueSelector";
 
 type Props = {
   grouped: Record<string, OrSchedule[]>;
@@ -10,10 +11,28 @@ type Props = {
 };
 
 export default function GroupedOrSchedule({ grouped, tab }: Props) {
-  const [openDate, setOpenDate] = useState<string | null>(null);
+  const [openDates, setOpenDates] = useState<string[]>([]);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+
+    const saved = localStorage.getItem("openDates");
+    if (saved) {
+      setOpenDates(JSON.parse(saved));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isClient) {
+      localStorage.setItem("openDates", JSON.stringify(openDates));
+    }
+  }, [openDates, isClient]);
 
   function toggle(date: string) {
-    setOpenDate((prev) => (prev === date ? null : date));
+    setOpenDates((prev) =>
+      prev.includes(date) ? prev.filter((d) => d !== date) : [...prev, date],
+    );
   }
 
   return (
@@ -33,71 +52,58 @@ export default function GroupedOrSchedule({ grouped, tab }: Props) {
           </button>
 
           {/* Collapsible content */}
-          {openDate === date && (
+          {isClient && openDates.includes(date) && (
             <div className="mt-3 space-y-2">
-              {items
-                .sort((a, b) => {
-                  // 1) status asc
-                  const statusOrder = a.status.localeCompare(b.status);
-                  if (statusOrder !== 0) return statusOrder;
-
-                  // 2) optype desc
-                  const opTypeOrder = b.optype.localeCompare(a.optype);
-                  if (opTypeOrder !== 0) return opTypeOrder;
-
-                  // 3) que asc
-                  return (a.que ?? 0) - (b.que ?? 0);
-                })
-                .map((item) => (
-                  <Link
-                    key={item.id}
-                    href={`/orschedule/${item.id}?tab=${tab}`}
-                    className="block p-3 bg-[#1f1f1f] border border-[#333] rounded hover:bg-[#2a2a2a]"
-                  >
-                    <div className="grid grid-cols-[60px_1fr_120px] gap-3">
-                      <div className="text-green-400">
-                        <p className={`font-bold ${
-                            item.optype === "GA"
-                              ? "text-blue-500"
-                              : "text-green-600"
-                          }`} >{item.que ?? "-"}</p>
-                      </div>
-                      <div className="text-gray-200">
-                        <p className="font-semibold">
-                          {item.ptname} {item.age} ปี
-                        </p>
-                        <p className="text-gray-400">
-                          {item.dx} {item.op}
-                        </p>
-                        {item.underlying && (
-                          <p className="text-gray-400">{item.underlying}</p>
-                        )}
-                      </div>
-                      <div className="text-right space-y-1">
-                        <p
-                          className={`font-bold ${
-                            item.status === "done"
-                              ? "text-green-400"
-                              : item.status === "cancel"
-                                ? "text-gray-400"
-                                : "text-blue-500"
-                          }`}
-                        >
-                          {item.status ?? "plan"}
-                        </p>
-                        <p
-                          className={`font-bold ${
-                            item.optype === "GA"
-                              ? "text-blue-500"
-                              : "text-green-600"
-                          }`}
-                        >
-                          {item.optype}
-                        </p>
-                      </div>
+              {items.map((item) => (
+                <Link
+                  key={item.id}
+                  href={`/orschedule/${item.id}?tab=${tab}`}
+                  className="block p-3 bg-[#1f1f1f] border border-[#333] rounded hover:bg-[#2a2a2a]"
+                >
+                  <div className="grid grid-cols-[60px_1fr_120px] gap-3">
+                    <div className="text-green-400">
+                      <QueSelector
+                        id={item.id}
+                        que={item.que}
+                        optype={item.optype}
+                      />
                     </div>
-                  </Link>
-                ))}
+                    <div className="text-gray-200">
+                      <p className="font-semibold">
+                        {item.ptname} {item.age} ปี
+                      </p>
+                      <p className="text-gray-400">
+                        {item.dx} {item.op}
+                      </p>
+                      {item.underlying && (
+                        <p className="text-gray-400">{item.underlying}</p>
+                      )}
+                    </div>
+                    <div className="text-right space-y-1">
+                      <p
+                        className={`font-bold ${
+                          item.status === "Done"
+                            ? "text-green-400"
+                            : item.status === "Cancel"
+                              ? "text-gray-400"
+                              : "text-blue-500"
+                        }`}
+                      >
+                        {item.status}
+                      </p>
+                      <p
+                        className={`font-bold ${
+                          item.optype === "GA"
+                            ? "text-blue-500"
+                            : "text-green-600"
+                        }`}
+                      >
+                        {item.optype}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
           )}
         </div>

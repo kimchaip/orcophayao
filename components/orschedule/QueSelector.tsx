@@ -1,0 +1,63 @@
+"use client";
+
+import { useState } from "react";
+
+type Props = {
+  id: number;
+  que: number | null;
+  optype: "GA" | "LA";
+};
+
+export default function QueSelector({ id, que, optype }: Props) {
+  const [open, setOpen] = useState(false);
+
+  async function updateQue(newQue: number) {
+    await fetch(`/api/orschedule/${id}/que`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ que: newQue }),
+    });
+
+    // reload page
+    window.location.reload();
+  }
+
+  return (
+    <div className="relative">
+      {/* Button */}
+      <button
+        onClick={(e) => {
+          e.preventDefault(); // prevent Link navigation
+          setOpen(!open);
+        }}
+        className={`font-bold ${
+          optype === "GA" ? "text-blue-500" : "text-green-600"
+        }`}
+      >
+        {que ?? "-"}
+      </button>
+
+      {/* Dropdown */}
+      {open && (
+        <div className="absolute z-20 bg-[#222] border border-[#444] rounded p-2 mt-1 w-20">
+          {[...Array(20)].map((_, i) => {
+            const q = i + 1;
+            return (
+              <button
+                key={q}
+                onClick={(e) => {
+                  e.preventDefault();
+                  updateQue(q);
+                  setOpen(false);
+                }}
+                className="block w-full text-left px-2 py-1 hover:bg-[#333]"
+              >
+                {q}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}

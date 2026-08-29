@@ -10,9 +10,9 @@ export default async function OrDashboardPage() {
   const data = await getOrSummary(year, month);
 
   const total = data.length;
-  const plan = data.filter((x) => x.status === "plan").length;
-  const done = data.filter((x) => x.status === "done").length;
-  const cancel = data.filter((x) => x.status === "cancel").length;
+  const plan = data.filter((x) => x.status === "Plan").length;
+  const done = data.filter((x) => x.status === "Done").length;
+  const cancel = data.filter((x) => x.status === "Cancel").length;
 
   const GA = data.filter((x) => x.optype === "GA").length;
   const LA = data.filter((x) => x.optype === "LA").length;

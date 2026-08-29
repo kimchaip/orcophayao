@@ -1,3 +1,6 @@
+type Status = "Plan" | "Done" | "Cancel";
+type OpType = "GA" | "LA";
+
 export type OrSchedule = {
   id: number;
   opdate: string;          // date → string (ISO)
@@ -5,11 +8,11 @@ export type OrSchedule = {
   age: number | null;
   dx: string;
   op: string;
-  optype: string;
+  optype: OpType;
   underlying: string | null;
   note: string | null;
   que: number;
-  status: string;
+  status: Status;
   media: any[];            // jsonb default []
   created_at: string;      // timestamptz → string
   updated_at: string;      // timestamptz → string

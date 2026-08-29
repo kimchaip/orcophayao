@@ -2,31 +2,67 @@ import { createClient } from "@/lib/supabase/server";
 import type { OrSchedule } from "@/types/orschedule";
 
 export const monEng = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 export const monThai = [
-  "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.",
-  "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."
+  "ม.ค.",
+  "ก.พ.",
+  "มี.ค.",
+  "เม.ย.",
+  "พ.ค.",
+  "มิ.ย.",
+  "ก.ค.",
+  "ส.ค.",
+  "ก.ย.",
+  "ต.ค.",
+  "พ.ย.",
+  "ธ.ค.",
 ];
 export const monThaiFull = [
-  "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
-  "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+  "มกราคม",
+  "กุมภาพันธ์",
+  "มีนาคม",
+  "เมษายน",
+  "พฤษภาคม",
+  "มิถุนายน",
+  "กรกฎาคม",
+  "สิงหาคม",
+  "กันยายน",
+  "ตุลาคม",
+  "พฤศจิกายน",
+  "ธันวาคม",
 ];
 
 // ดึงทั้งหมด (หรือ filter ตามวันที่)
-export async function getOrScheduleList(opdate?: string, compare?: "lt" | "eq" | "gt"): Promise<OrSchedule[]> {
+export async function getOrScheduleList(
+  opdate?: string,
+  compare?: "lt" | "eq" | "gt",
+): Promise<OrSchedule[]> {
   const supabase = await createClient();
 
-  let query = supabase.from("orschedule").select("*").order("opdate", { ascending: true });
+  let query = supabase
+    .from("orschedule")
+    .select("*")
+    .order("opdate", { ascending: true })
+    .order("status", { ascending: false})
+    .order("optype", { ascending: false})
+    .order("que", { ascending: true})
 
   if (opdate && compare) {
-    if (compare == 'lt')
-      query = query.lt("opdate", opdate);
-    else if (compare == 'eq')
-      query = query.eq("opdate", opdate);
-    else if (compare == 'gt')
-      query = query.gt("opdate", opdate);
+    if (compare == "lt") query = query.lt("opdate", opdate);
+    else if (compare == "eq") query = query.eq("opdate", opdate);
+    else if (compare == "gt") query = query.gt("opdate", opdate);
   }
 
   const { data, error } = await query;
@@ -49,7 +85,10 @@ export async function getOrScheduleByMonth(year: number, month: number) {
     .select("*")
     .gte("opdate", start)
     .lte("opdate", end)
-    .order("opdate");
+    .order("opdate", { ascending: true })
+    .order("status", { ascending: false})
+    .order("optype", { ascending: false})
+    .order("que", { ascending: true})
 
   if (error) throw new Error(error.message);
 
@@ -57,7 +96,9 @@ export async function getOrScheduleByMonth(year: number, month: number) {
 }
 
 // ดึงรายการเดียว
-export async function getOrScheduleById(id: number): Promise<OrSchedule | null> {
+export async function getOrScheduleById(
+  id: number,
+): Promise<OrSchedule | null> {
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -72,15 +113,14 @@ export async function getOrScheduleById(id: number): Promise<OrSchedule | null> 
 }
 
 // สร้างใหม่
-export async function createOrSchedule(payload: Partial<OrSchedule>): Promise<OrSchedule> {
+export async function createOrSchedule(
+  payload: Partial<OrSchedule>,
+): Promise<OrSchedule> {
   const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("orschedule")
-    .insert({
-      ...payload,
-      status: payload.status ?? "plan",
-    })
+    .insert(payload)
     .select()
     .single();
 
@@ -92,7 +132,7 @@ export async function createOrSchedule(payload: Partial<OrSchedule>): Promise<Or
 // อัปเดต
 export async function updateOrSchedule(
   id: number,
-  payload: Partial<OrSchedule>
+  payload: Partial<OrSchedule>,
 ): Promise<OrSchedule> {
   const supabase = await createClient();
 
@@ -130,10 +170,7 @@ export async function deleteOrSchedule(id: number): Promise<boolean> {
   }
 
   // ลบ record
-  const { error } = await supabase
-    .from("orschedule")
-    .delete()
-    .eq("id", id);
+  const { error } = await supabase.from("orschedule").delete().eq("id", id);
 
   if (error) throw new Error(error.message);
 

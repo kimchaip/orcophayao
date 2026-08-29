@@ -131,6 +131,22 @@ export default function OrScheduleForm({ initial = {}, onSubmit }: Props) {
         />
       </div>
 
+      {/* Status */}
+      {initial?.id && (
+        <div className="space-y-1">
+          <label className="text-gray-300">Status</label>
+          <select
+            value={form.status ?? "Plan"}
+            onChange={(e) => updateField("status", e.target.value)}
+            className="w-full bg-[#222] text-white px-3 py-2 rounded border border-[#444] focus:outline-none focus:border-green-500"
+          >
+            <option value="Plan">Plan</option>
+            <option value="Done">Done</option>
+            <option value="Cancel">Cancel</option>
+          </select>
+        </div>
+      )}
+
       {/* Submit */}
       <button
         type="submit"

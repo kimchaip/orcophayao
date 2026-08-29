@@ -71,7 +71,7 @@ export default async function OrScheduleDetail(props: PageProps) {
                 <img src={m.url} alt={m.name} className="w-48 rounded border" />
 
                 <Link
-                  href={`/orschedule/${item.id}/media/delete/${i}`}
+                  href={`/orschedule/${item.id}/media/delete/${i}?tab=${tab}`}
                   className="text-red-600 underline"
                 >
                   Delete
