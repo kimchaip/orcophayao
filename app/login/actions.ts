@@ -22,7 +22,6 @@ export async function login(formData: FormData) {
     redirect(`/error?message=${error.message}`);
   }
 
-  revalidatePath('/', 'layout')
   redirect("/orschedule/dashboard");
 }
 
@@ -43,6 +42,5 @@ export async function signup(formData: FormData) {
     redirect(`/error?message=${error.message}`);
   }
 
-  revalidatePath('/', 'layout')
   redirect("/check-email");
 }
