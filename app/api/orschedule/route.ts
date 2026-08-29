@@ -1,10 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
-export async function GET(req: Request) {
+// ---------------- GET ----------------
+export async function GET(request: NextRequest) {
   const supabase = await createClient();
 
-  const { searchParams } = new URL(req.url);
+  const { searchParams } = new URL(request.url);
   const date = searchParams.get("date");
 
   let query = supabase.from("orschedule").select("*");
@@ -14,15 +15,19 @@ export async function GET(req: Request) {
   const { data, error } = await query.order("start_time");
 
   if (error) {
-    return NextResponse.json({ ok: false, error: error.message }, { status: 400 });
+    return NextResponse.json(
+      { ok: false, error: error.message },
+      { status: 400 }
+    );
   }
 
   return NextResponse.json({ ok: true, data });
 }
 
-export async function POST(req: Request) {
+// ---------------- POST ----------------
+export async function POST(request: NextRequest) {
   const supabase = await createClient();
-  const body = await req.json();
+  const body = await request.json();
 
   const { data, error } = await supabase
     .from("orschedule")
@@ -31,7 +36,10 @@ export async function POST(req: Request) {
     .single();
 
   if (error) {
-    return NextResponse.json({ ok: false, error: error.message }, { status: 400 });
+    return NextResponse.json(
+      { ok: false, error: error.message },
+      { status: 400 }
+    );
   }
 
   return NextResponse.json({ ok: true, data });
