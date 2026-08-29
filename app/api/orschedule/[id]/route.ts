@@ -4,10 +4,10 @@ import { createClient } from "@/lib/supabase/server";
 // ---------------- GET ----------------
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createClient();
-  const id = context.params.id;
+  const { id } = await context.params;
 
   const { data, error } = await supabase
     .from("orschedule")
@@ -25,10 +25,10 @@ export async function GET(
 // ---------------- PATCH ----------------
 export async function PATCH(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createClient();
-  const id = context.params.id;
+  const { id } = await context.params;
   const body = await req.json();
 
   const { data, error } = await supabase
@@ -48,10 +48,10 @@ export async function PATCH(
 // ---------------- DELETE ----------------
 export async function DELETE(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createClient();
-  const id = context.params.id;
+  const { id } = await context.params;
 
   const { error } = await supabase
     .from("orschedule")
