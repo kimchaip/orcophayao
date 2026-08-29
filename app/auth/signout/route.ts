@@ -11,9 +11,6 @@ export async function POST(request: NextRequest) {
     await supabase.auth.signOut();
   }
 
-  // ❌ revalidatePath ไม่ใช้ใน Route Handler (Next.js 16)
-  // ใช้ redirect ตรง ๆ แทน
-
   return NextResponse.redirect(new URL("/", request.url), {
     status: 302,
   });
