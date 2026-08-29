@@ -1,13 +1,18 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+// ---------------- GET ----------------
+export async function GET(
+  request: NextRequest,
+  context: { params: { id: string } }
+) {
   const supabase = await createClient();
+  const id = context.params.id;
 
   const { data, error } = await supabase
     .from("orschedule")
     .select("*")
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (error) {
@@ -17,14 +22,19 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   return NextResponse.json({ ok: true, data });
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+// ---------------- PATCH ----------------
+export async function PATCH(
+  req: NextRequest,
+  context: { params: { id: string } }
+) {
   const supabase = await createClient();
+  const id = context.params.id;
   const body = await req.json();
 
   const { data, error } = await supabase
     .from("orschedule")
     .update(body)
-    .eq("id", params.id)
+    .eq("id", id)
     .select()
     .single();
 
@@ -35,13 +45,18 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   return NextResponse.json({ ok: true, data });
 }
 
-export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+// ---------------- DELETE ----------------
+export async function DELETE(
+  req: NextRequest,
+  context: { params: { id: string } }
+) {
   const supabase = await createClient();
+  const id = context.params.id;
 
   const { error } = await supabase
     .from("orschedule")
     .delete()
-    .eq("id", params.id);
+    .eq("id", id);
 
   if (error) {
     return NextResponse.json({ ok: false, error: error.message }, { status: 400 });
