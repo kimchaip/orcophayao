@@ -1,19 +1,20 @@
-import { createClient } from '@/lib/supabase/server'
-import { revalidatePath } from 'next/cache'
-import { type NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
 
-export async function POST(req: NextRequest) {
-  const supabase = await createClient()
+export async function POST(request: NextRequest) {
+  const supabase = await createClient();
 
   // Check if a user's logged in
-  const { data: claimsData } = await supabase.auth.getClaims()
+  const { data: claimsData } = await supabase.auth.getClaims();
 
   if (claimsData?.claims) {
-    await supabase.auth.signOut()
+    await supabase.auth.signOut();
   }
 
-  revalidatePath('/', 'layout')
-  return NextResponse.redirect(new URL('/', req.url), {
+  // ❌ revalidatePath ไม่ใช้ใน Route Handler (Next.js 16)
+  // ใช้ redirect ตรง ๆ แทน
+
+  return NextResponse.redirect(new URL("/", request.url), {
     status: 302,
-  })
+  });
 }
