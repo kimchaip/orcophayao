@@ -54,18 +54,24 @@ export default function GroupedOrSchedule({ grouped, tab }: Props) {
           {/* Collapsible content */}
           {isClient && openDates.includes(date) && (
             <div className="mt-3 space-y-2">
-              {items.map((item) => (
+              {items.map((item, _, all) => {
+                const maxQue = all.filter(
+                  (i) => i.optype === item.optype && i.status !== "Cancel"
+                ).length;
+                return (
                 <Link
                   key={item.id}
                   href={`/orschedule/${item.id}?tab=${tab}`}
                   className="block p-3 bg-[#1f1f1f] border border-[#333] rounded hover:bg-[#2a2a2a]"
                 >
                   <div className="grid grid-cols-[60px_1fr_120px] gap-3">
-                    <div className="text-green-400">
+                    <div className="text-green-600">
                       <QueSelector
                         id={item.id}
                         que={item.que}
                         optype={item.optype}
+                        maxQue={maxQue}
+                        status={item.status}
                       />
                     </div>
                     <div className="text-gray-200">
@@ -83,7 +89,7 @@ export default function GroupedOrSchedule({ grouped, tab }: Props) {
                       <p
                         className={`font-bold ${
                           item.status === "Done"
-                            ? "text-green-400"
+                            ? "text-green-600"
                             : item.status === "Cancel"
                               ? "text-gray-400"
                               : "text-blue-500"
@@ -103,7 +109,7 @@ export default function GroupedOrSchedule({ grouped, tab }: Props) {
                     </div>
                   </div>
                 </Link>
-              ))}
+              )})}
             </div>
           )}
         </div>
