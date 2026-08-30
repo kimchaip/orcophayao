@@ -24,6 +24,8 @@ export default function OrScheduleForm({ initial = {}, onSubmit }: Props) {
     setLoading(false);
   }
 
+  console.log(!initial?.id);
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* วันที่ผ่าตัด */}
@@ -85,30 +87,35 @@ export default function OrScheduleForm({ initial = {}, onSubmit }: Props) {
         />
       </div>
 
-      {/* Type */}
-      <div className="space-y-1">
-        <label className="text-gray-300">Type</label>
-        <select
-          value={form.optype ?? "GA"}
-          onChange={(e) => updateField("optype", e.target.value)}
-          className="w-full bg-[#222] text-white px-3 py-2 rounded border border-[#444] focus:outline-none focus:border-green-500"
-        >
-          <option value="GA">GA</option>
-          <option value="LA">LA</option>
-        </select>
-      </div>
-
-      {initial?.id && (
+      {/* Type + Queue (2 columns) */}
+      <div className="grid grid-cols-2 gap-4">
+        {/* Type */}
         <div className="space-y-1">
-          <label className="text-gray-300">Queue</label>
-          <input
-            type="number"
-            value={form.que ?? ""}
-            onChange={(e) => updateField("que", Number(e.target.value))}
-            className="w-full bg-[#222] text-white px-3 py-2 rounded border border-[#444]"
-          />
+          <label className="text-gray-300">Type</label>
+          <select
+            value={form.optype ?? "GA"}
+            onChange={(e) => updateField("optype", e.target.value)}
+            className="w-full bg-[#222] text-white px-3 py-2 rounded border border-[#444] 
+                   focus:outline-none focus:border-green-500"
+          >
+            <option value="GA">GA</option>
+            <option value="LA">LA</option>
+          </select>
         </div>
-      )}
+
+        {/* Queue */}
+        <div className="space-y-1">
+            <label className="text-gray-300">Queue</label>
+            <input
+              type="number"
+              value={form.que ?? ""}
+              disabled={!initial?.id}
+              onChange={(e) => updateField("que", Number(e.target.value))}
+              className="w-full bg-[#222] text-white px-3 py-2 rounded border border-[#444] 
+                   focus:outline-none focus:border-green-500"
+            />
+          </div>
+      </div>
 
       {/* Underlying */}
       <div className="space-y-1">

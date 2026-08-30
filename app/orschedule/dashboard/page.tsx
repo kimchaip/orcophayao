@@ -26,79 +26,77 @@ export default async function OrDashboardPage() {
   const tomorrowCases = data.filter((x) => x.opdate === tomorrowStr);
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="min-h-screen bg-[#0b0b0b] text-white px-4 py-6 space-y-6 max-w-md mx-auto">
       <Navbar />
 
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-xl font-bold">OR Dashboard</h1>
-
-      </div>
+      <h1 className="text-xl font-bold tracking-wide">OR Dashboard</h1>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="border border-[#333] p-4 rounded-lg bg-[#151515] shadow-sm">
-          <p className="font-semibold text-gray-300">เคสทั้งหมด</p>
-          <p className="text-3xl font-bold text-white">{total}</p>
-        </div>
-
-        <div className="border border-[#333] p-4 rounded-lg bg-[#151515] shadow-sm">
-          <p className="font-semibold text-gray-300">Plan</p>
-          <p className="text-3xl font-bold text-yellow-300">{plan}</p>
-        </div>
-
-        <div className="border border-[#333] p-4 rounded-lg bg-[#151515] shadow-sm">
-          <p className="font-semibold text-gray-300">Done</p>
-          <p className="text-3xl font-bold text-green-300">{done}</p>
-        </div>
-
-        <div className="border border-[#333] p-4 rounded-lg bg-[#151515] shadow-sm">
-          <p className="font-semibold text-gray-300">Cancel</p>
-          <p className="text-3xl font-bold text-red-300">{cancel}</p>
-        </div>
-
-        <div className="border border-[#333] p-4 rounded-lg bg-[#151515] shadow-sm">
-          <p className="font-semibold text-gray-300">GA</p>
-          <p className="text-3xl font-bold text-blue-300">{GA}</p>
-        </div>
-
-        <div className="border border-[#333] p-4 rounded-lg bg-[#151515] shadow-sm">
-          <p className="font-semibold text-gray-300">LA</p>
-          <p className="text-3xl font-bold text-pink-300">{LA}</p>
-        </div>
+      <div className="grid grid-cols-2 gap-4">
+        <DashboardCard label="เคสทั้งหมด" value={total} color="text-white" />
+        <DashboardCard label="Plan" value={plan} color="text-yellow-300" />
+        <DashboardCard label="Done" value={done} color="text-green-300" />
+        <DashboardCard label="Cancel" value={cancel} color="text-red-300" />
+        <DashboardCard label="GA" value={GA} color="text-blue-300" />
+        <DashboardCard label="LA" value={LA} color="text-pink-300" />
       </div>
 
       {/* Today Cases */}
-      <div>
-        <h2 className="font-bold mb-2">เคสวันนี้ ({todayStr})</h2>
-        {todayCases.length === 0 && <p className="text-gray-500">ไม่มีเคส</p>}
-        {todayCases.map((item) => (
-          <Link
-            key={item.id}
-            href={`/orschedule/${item.id}`}
-            className="block border p-3 rounded mb-2 hover:bg-gray-50"
-          >
-            {item.ptname} — {item.op}
-          </Link>
-        ))}
-      </div>
+      <CaseList title={`เคสวันนี้ (${todayStr})`} cases={todayCases} />
 
       {/* Tomorrow Cases */}
-      <div>
-        <h2 className="font-bold mb-2">เคสพรุ่งนี้ ({tomorrowStr})</h2>
-        {tomorrowCases.length === 0 && (
-          <p className="text-gray-500">ไม่มีเคส</p>
-        )}
-        {tomorrowCases.map((item) => (
-          <Link
-            key={item.id}
-            href={`/orschedule/${item.id}`}
-            className="block border p-3 rounded mb-2 hover:bg-gray-50"
-          >
-            {item.ptname} — {item.op}
-          </Link>
-        ))}
-      </div>
+      <CaseList title={`เคสพรุ่งนี้ (${tomorrowStr})`} cases={tomorrowCases} />
+    </div>
+  );
+}
+
+function DashboardCard({
+  label,
+  value,
+  color,
+}: {
+  label: string;
+  value: number;
+  color: string;
+}) {
+  return (
+    <div className="border border-[#333] p-4 rounded-xl bg-[#151515] shadow-md">
+      <p className="font-semibold text-gray-300 text-sm">{label}</p>
+      <p className={`text-3xl font-bold ${color}`}>{value}</p>
+    </div>
+  );
+}
+
+function CaseList({
+  title,
+  cases,
+}: {
+  title: string;
+  cases: any[];
+}) {
+  return (
+    <div className="space-y-2">
+      <h2 className="font-bold text-lg">{title}</h2>
+
+      {cases.length === 0 && (
+        <p className="text-gray-500 text-sm">ไม่มีเคส</p>
+      )}
+
+      {cases.map((item) => (
+        <Link
+          key={item.id}
+          href={`/orschedule/${item.id}`}
+          className="block bg-[#151515] border border-[#333] p-3 rounded-lg hover:bg-[#1f1f1f] active:scale-95"
+        >
+          <p className="text-white font-medium text-sm break-words">
+            {item.ptname}
+          </p>
+          <p className="text-gray-400 text-xs break-words leading-tight">
+            {item.op}
+          </p>
+        </Link>
+      ))}
     </div>
   );
 }

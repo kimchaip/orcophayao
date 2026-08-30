@@ -86,13 +86,14 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
   }
 
   return (
-    <div className="bg-[#1a1a1a] p-6 rounded-lg shadow-md border border-[#333] text-white space-y-6 max-w-lg mx-auto">
+    <div className="bg-[#1a1a1a] p-5 rounded-xl shadow-lg border border-[#333] text-white space-y-6 max-w-sm mx-auto">
+
       {/* Avatar */}
       <div className="flex justify-center">
         <Avatar
           uid={claims?.sub ?? null}
           url={avatar_url}
-          size={150}
+          size={120}
           onUpload={(url) => {
             setAvatarUrl(url);
             updateProfile({ fullname, username, website, avatar_url: url });
@@ -102,7 +103,7 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
 
       {/* Email */}
       <div className="space-y-1">
-        <label htmlFor="email" className="text-sm text-gray-300">
+        <label htmlFor="email" className="text-xs text-gray-300">
           Email
         </label>
         <input
@@ -110,13 +111,13 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
           type="text"
           value={claims?.email ?? ""}
           disabled
-          className="w-full p-2 rounded bg-[#222] text-gray-400 border border-[#444]"
+          className="w-full p-2 rounded-lg bg-[#222] text-gray-400 border border-[#444]"
         />
       </div>
 
       {/* Full Name */}
       <div className="space-y-1">
-        <label htmlFor="fullName" className="text-sm text-gray-300">
+        <label htmlFor="fullName" className="text-xs text-gray-300">
           Full Name
         </label>
         <input
@@ -124,13 +125,13 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
           type="text"
           value={fullname || ""}
           onChange={(e) => setFullname(e.target.value)}
-          className="w-full p-2 rounded bg-[#222] text-white border border-[#444] focus:outline-none focus:border-green-500"
+          className="w-full p-2 rounded-lg bg-[#222] text-white border border-[#444] focus:outline-none focus:border-green-500"
         />
       </div>
 
       {/* Username */}
       <div className="space-y-1">
-        <label htmlFor="username" className="text-sm text-gray-300">
+        <label htmlFor="username" className="text-xs text-gray-300">
           Username
         </label>
         <input
@@ -138,13 +139,13 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
           type="text"
           value={username || ""}
           onChange={(e) => setUsername(e.target.value)}
-          className="w-full p-2 rounded bg-[#222] text-white border border-[#444] focus:outline-none focus:border-green-500"
+          className="w-full p-2 rounded-lg bg-[#222] text-white border border-[#444] focus:outline-none focus:border-green-500"
         />
       </div>
 
       {/* Website */}
       <div className="space-y-1">
-        <label htmlFor="website" className="text-sm text-gray-300">
+        <label htmlFor="website" className="text-xs text-gray-300">
           Website
         </label>
         <input
@@ -152,13 +153,13 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
           type="url"
           value={website || ""}
           onChange={(e) => setWebsite(e.target.value)}
-          className="w-full p-2 rounded bg-[#222] text-white border border-[#444] focus:outline-none focus:border-green-500"
+          className="w-full p-2 rounded-lg bg-[#222] text-white border border-[#444] focus:outline-none focus:border-green-500"
         />
       </div>
 
       {/* Update Button */}
       <button
-        className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded transition"
+        className="w-full bg-green-600 hover:bg-green-700 text-white py-2.5 rounded-lg text-sm active:scale-95 transition"
         onClick={() =>
           updateProfile({ fullname, username, website, avatar_url })
         }
@@ -167,11 +168,11 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
         {loading ? "Loading ..." : "Save"}
       </button>
 
-      {/* cancel */}
+      {/* Cancel */}
       <button
         type="button"
         onClick={() => window.history.back()}
-        className="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 rounded transition"
+        className="w-full bg-gray-700 hover:bg-gray-600 text-white py-2.5 rounded-lg text-sm active:scale-95 transition"
       >
         Cancel
       </button>

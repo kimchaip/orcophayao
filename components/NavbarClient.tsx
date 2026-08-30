@@ -15,7 +15,8 @@ export default function NavbarClient() {
 
   return (
     <select
-      className="bg-[#222] text-white px-4 py-2 rounded border border-[#333] focus:outline-none"
+      className="bg-[#222] text-white text-sm px-1 py-2 rounded-lg border border-[#333] 
+                 focus:outline-none active:scale-95"
       value={current}
       onChange={(e) => {
         const path = e.target.value;

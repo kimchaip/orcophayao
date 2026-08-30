@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 
 export default async function CreateOrSchedulePage(props: {
-  searchParams: Promise<{ [key:string]: string | string[] }>;
+  searchParams: Promise<{ [key: string]: string | string[] }>;
 }) {
   const searchParams = await props.searchParams;
   const tab = searchParams.tab ?? "today";
@@ -13,18 +13,17 @@ export default async function CreateOrSchedulePage(props: {
   async function handleSubmit(values: any) {
     "use server";
     await createOrSchedule(values);
-    
+
     redirect(`/orschedule?tab=${tab}`);
   }
 
   return (
     <div className="min-h-screen bg-[#0b0b0b] text-white">
-      <Navbar />
 
-      <div className="p-6 max-w-3xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Add New OR Schedule</h1>
+      {/* Fixed Header */}
+      <div className="sticky top-0 z-50 bg-[#0b0b0b] border-b border-[#333] px-6 py-4 shadow-lg">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold">เพิ่มข้อมูล</h1>
 
           <Link
             href="/orschedule"
@@ -33,11 +32,11 @@ export default async function CreateOrSchedulePage(props: {
             Back
           </Link>
         </div>
+      </div>
 
-        {/* Form Card */}
-        <div className="bg-[#151515] border border-[#333] rounded-lg p-6 shadow-lg">
-          <OrScheduleForm onSubmit={handleSubmit} />
-        </div>
+      {/* Form Card */}
+      <div className="bg-[#151515] border border-[#333] rounded-lg p-6 shadow-lg">
+        <OrScheduleForm onSubmit={handleSubmit} />
       </div>
     </div>
   );

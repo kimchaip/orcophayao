@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { OrSchedule } from "@/types/orschedule";
 import QueSelector from "@/components/orschedule/QueSelector";
+import { monEng } from "@/lib/utils/my";
 
 type Props = {
   grouped: Record<string, OrSchedule[]>;
@@ -37,83 +38,102 @@ export default function GroupedOrSchedule({ grouped, tab }: Props) {
 
   return (
     <div className="space-y-4">
-      {Object.entries(grouped).map(([date, items]) => (
-        <div
-          key={date}
-          className="bg-[#151515] border border-[#333] rounded p-4"
-        >
-          {/* Header row */}
-          <button
-            onClick={() => toggle(date)}
-            className="w-full text-left flex justify-between items-center"
+      {Object.entries(grouped).map(([date, items]) => {
+        const dateObj = new Date(date);
+        const dateDisplay = dateObj.getDate() + " " + monEng[dateObj.getMonth()];
+        return (
+          <div
+            key={date}
+            className="bg-[#151515] border border-[#333] rounded p-4"
           >
-            <span className="text-lg font-bold">{date}</span>
-            <span className="text-gray-400">{items.length} cases</span>
-          </button>
+            {/* Header row */}
+            <button
+              onClick={() => toggle(date)}
+              className="w-full text-left flex justify-between items-center"
+            >
+              <span className="text-lg font-bold">{dateDisplay}</span>
+              <span className="text-gray-400">{items.length} cases</span>
+            </button>
 
-          {/* Collapsible content */}
-          {isClient && openDates.includes(date) && (
-            <div className="mt-3 space-y-2">
-              {items.map((item, _, all) => {
-                const maxQue = all.filter(
-                  (i) => i.optype === item.optype && i.status !== "Cancel"
-                ).length;
-                return (
-                <Link
-                  key={item.id}
-                  href={`/orschedule/${item.id}?tab=${tab}`}
-                  className="block p-3 bg-[#1f1f1f] border border-[#333] rounded hover:bg-[#2a2a2a]"
-                >
-                  <div className="grid grid-cols-[60px_1fr_120px] gap-3">
-                    <div className="text-green-600">
-                      <QueSelector
-                        id={item.id}
-                        que={item.que}
-                        optype={item.optype}
-                        maxQue={maxQue}
-                        status={item.status}
-                      />
-                    </div>
-                    <div className="text-gray-200">
-                      <p className="font-semibold">
-                        {item.ptname} {item.age} ปี
-                      </p>
-                      <p className="text-gray-400">
-                        {item.dx} {item.op}
-                      </p>
-                      {item.underlying && (
-                        <p className="text-gray-400">{item.underlying}</p>
-                      )}
-                    </div>
-                    <div className="text-right space-y-1">
-                      <p
-                        className={`font-bold ${
-                          item.status === "Done"
-                            ? "text-green-600"
-                            : item.status === "Cancel"
-                              ? "text-gray-400"
-                              : "text-blue-500"
-                        }`}
-                      >
-                        {item.status}
-                      </p>
-                      <p
-                        className={`font-bold ${
-                          item.optype === "GA"
-                            ? "text-blue-500"
-                            : "text-green-600"
-                        }`}
-                      >
-                        {item.optype}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              )})}
-            </div>
-          )}
-        </div>
-      ))}
+            {/* Collapsible content */}
+            {isClient && openDates.includes(date) && (
+              <div className="mt-3 space-y-2">
+                {items.map((item, _, all) => {
+                  const maxQue = all.filter(
+                    (i) => i.optype === item.optype && i.status !== "Cancel",
+                  ).length;
+                  return (
+                    <Link
+                      key={item.id}
+                      href={`/orschedule/${item.id}?tab=${tab}`}
+                      className="block p-3 bg-[#1f1f1f] border border-[#333] rounded hover:bg-[#2a2a2a]"
+                    >
+                      <div className="grid grid-cols-[40px_1fr_70px] gap-2">
+                        {/* QUE */}
+                        <div className="text-green-600">
+                          <QueSelector
+                            id={item.id}
+                            que={item.que}
+                            optype={item.optype}
+                            maxQue={maxQue}
+                            status={item.status}
+                          />
+                        </div>
+
+                        {/* DETAIL BLOCK */}
+                        <div className="text-gray-200 space-y-1 pr-1">
+                          <p className="font-semibold text-xs leading-tight break-words">
+                            {item.ptname} {item.age} ปี
+                          </p>
+
+                          <p className="text-gray-400 text-xs leading-tight break-words">
+                            {item.dx}
+                          </p>
+
+                          <p className="text-gray-400 text-xs leading-tight break-words">
+                            {item.op}
+                          </p>
+
+                          {item.underlying && (
+                            <p className="text-gray-400 text-xs leading-tight break-words">
+                              {item.underlying}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* STATUS + TYPE */}
+                        <div className="text-right space-y-1 text-xs leading-tight">
+                          <p
+                            className={`font-bold ${
+                              item.status === "Done"
+                                ? "text-green-600"
+                                : item.status === "Cancel"
+                                  ? "text-gray-400"
+                                  : "text-blue-500"
+                            }`}
+                          >
+                            {item.status}
+                          </p>
+
+                          <p
+                            className={`font-bold ${
+                              item.optype === "GA"
+                                ? "text-blue-500"
+                                : "text-green-600"
+                            }`}
+                          >
+                            {item.optype}
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
